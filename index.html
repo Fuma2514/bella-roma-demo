@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bella Roma — AI Reservation Assistant</title>
+<style>
+body{margin:0;font-family:Georgia,serif;background:#1a1210;color:#f5ead9}
+.hero{padding:48px 24px;text-align:center;background:linear-gradient(160deg,#2a1712,#3d221a)}
+h1{margin:0;font-size:2rem;color:#e8c98a}.sub{opacity:.85;margin-top:8px}
+.chatbox{max-width:520px;margin:32px auto;background:#241611;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,.5);overflow:hidden}
+.hd{padding:14px 18px;background:#e8c98a;color:#2a1712;font-weight:bold}
+#log{height:320px;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px}
+.m{max-width:80%;padding:10px 14px;border-radius:12px;line-height:1.4}
+.bot{background:#3a241b;align-self:flex-start}.usr{background:#e8c98a;color:#2a1712;align-self:flex-end}
+form{display:flex;border-top:1px solid #3a241b}input{flex:1;padding:14px;background:#1a1210;border:0;color:#f5ead9;outline:0}
+button{padding:14px 20px;background:#e8c98a;border:0;font-weight:bold;cursor:pointer}
+.ft{max-width:520px;margin:0 auto 40px;text-align:center;opacity:.7;font-size:.85rem;padding:0 16px}
+</style></head><body>
+<div class="hero"><h1>Bella Roma Trattoria</h1><div class="sub">Reservations &amp; menu — answered instantly by AI, 24/7</div></div>
+<div class="chatbox"><div class="hd">AI Assistant — ask anything</div><div id="log"></div>
+<form id="f"><input id="i" placeholder="Table for 4 this Saturday at 7pm?" autocomplete="off"><button>Send</button></form></div>
+<div class="ft">Demo assistant built by Fuma Agent · live in under 24h for any restaurant</div>
+<script>
+const log=document.getElementById('log');
+function add(t,who){const d=document.createElement('div');d.className='m '+who;d.textContent=t;log.appendChild(d);log.scrollTop=log.scrollHeight}
+add("Buonasera! I can book tables, answer the menu, or take your details. What can I do for you?","bot");
+const DB={hours:"We're open Tue–Sun, 12:00–15:00 and 18:00–23:00. Closed Mondays.",menu:"House favorites: truffle tagliatelle $22, osso buco $28, margherita $14. Full menu changes weekly.",vegan:"Yes! We have vegan risotto, vegan margherita, and seasonal vegetable antipasti.",parking:"Free parking after 6pm in the lot behind the restaurant.",cancel:"No problem — cancellations are free up to 2 hours before your booking."};
+let stage=0,guests=null,when=null;
+function reply(q){const l=q.toLowerCase();
+for(const k in DB){if(l.includes(k))return DB[k]}
+if(l.includes('table')||l.includes('book')||l.includes('reserv')){stage=1;return "Happy to book! How many guests?"}
+if(stage==1){guests=q.trim();stage=2;return guests+" guests — which day and time?"}
+if(stage==2){when=q.trim();stage=3;return "Table for "+guests+", "+when+" — I've noted it. A human from Bella Roma will confirm within an hour. What name should I put it under?"}
+if(stage==3){return "Grazie, "+q.trim()+"! Your request is logged. See you at Bella Roma!"}
+return "I can help with reservations, opening hours, the menu, or dietary options. Try asking about a table!";}
+document.getElementById('f').onsubmit=e=>{e.preventDefault();const i=document.getElementById('i');const q=i.value.trim();if(!q)return;add(q,'usr');i.value='';setTimeout(()=>add(reply(q),'bot'),400)};
+</script></body></html>
