@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Bella Roma — AI Reservation Assistant</title>
+<meta name="description" content="Bella Roma Trattoria — demo AI reservation assistant by Fuma Digital. Reservations & menu answered instantly, 24/7."><meta property="og:title" content="Bella Roma — AI Reservation Assistant"><meta property="og:description" content="Demo AI reservation assistant by Fuma Digital — reservations & menu answered instantly, 24/7."><meta property="og:type" content="website"><title>Bella Roma — AI Reservation Assistant</title><link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍝</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;box-sizing:border-box}html{scroll-behavior:smooth}
@@ -156,7 +156,8 @@ log.appendChild(card);log.scrollTop=log.scrollHeight;
 const msg=`RESERVASI BARU BELLA ROMA%0A%0ANama: ${rv.name}%0ATamu: ${rv.guests}%0AWaktu: ${rv.when}%0A%0A(otomatis dari chatbot demo)`;
 fetch("https://formsubmit.co/ajax/"+OWNER_EMAIL,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},
 body:JSON.stringify({_subject:"🍽️ Reservasi baru: "+rv.name+" — "+rv.guests+" — "+rv.when,name:rv.name,guests:rv.guests,when:rv.when,source:"bella-roma-demo chatbot"})})
-.then(r=>r.json()).then(j=>{if(j.success!=="true"&&j.success!==true)console.warn("formsubmit:",j)}).catch(()=>{});
+.then(r=>r.json()).then(j=>{if(j.success!=="true"&&j.success!==true)markEmailFail()}).catch(()=>markEmailFail());
+function markEmailFail(){const ok=document.querySelector('.bcard .ok');if(ok)ok.textContent='Staf Bella Roma akan konfirmasi dalam 1 jam. (Kirim otomatis gagal — pakai tombol WhatsApp / Email di bawah ya.) 📩'}
 hist.push({role:"assistant",content:"Reservasi dicatat: "+rv.name+", "+rv.guests+", "+rv.when+". Staf akan konfirmasi 1 jam."});
 rv=null;document.getElementById('i').placeholder='Tanya apa aja...';
 chipRow([{label:"🍕 Ada pizza apa?",v:"Ada pizza apa?"},{label:"🕘 Jam buka?",v:"Jam buka?"}]);
