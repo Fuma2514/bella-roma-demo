@@ -55,6 +55,13 @@ button:hover{filter:brightness(1.1)}
 .ft .b{display:inline-block;margin-top:10px;padding:8px 18px;border:1px solid rgba(201,168,106,.4);border-radius:99px;transition:.2s}
 .ft .b:hover{background:rgba(201,168,106,.1)}
 @media(max-width:520px){.chips{display:none}}
+/* reservation card */
+.bcard{background:linear-gradient(140deg,rgba(232,201,138,.16),rgba(232,201,138,.05));border:1px solid rgba(232,201,138,.45);border-radius:14px;padding:14px 16px;max-width:88%;align-self:flex-start;font-size:.9rem;line-height:1.7}
+.bcard h4{font-family:'Playfair Display';color:#f7e7bd;margin-bottom:6px;font-size:1rem}
+.bcard .row{display:flex;justify-content:space-between;gap:10px;color:#d8cba4}
+.bcard .row b{color:#f5eeda;font-weight:600;text-align:right}
+.bcard .ok{margin-top:8px;color:#8fdc9f;font-size:.8rem}
+.bcard a.wa{display:inline-block;margin-top:10px;padding:8px 14px;border-radius:99px;background:#25D366;color:#0a2e14;font-weight:700;font-size:.8rem;text-decoration:none}
 </style></head><body>
 <div class="grain"></div>
 <div class="wrap">
@@ -70,6 +77,7 @@ button:hover{filter:brightness(1.1)}
 <button class="chip" onclick="quick('Ada pizza apa?')">🍕 Ada pizza apa?</button>
 <button class="chip" onclick="quick('Table for 4 this Saturday at 7pm')">🪑 Reservasi 4 orang</button>
 <button class="chip" onclick="quick('Jam buka?')">🕘 Jam buka?</button>
+<button class="chip" onclick="startReservation()">🪑 Reservasi sekarang</button>
 </div>
 <form id="f"><input id="i" placeholder="Table for 4 this Saturday at 7pm?" autocomplete="off"><button>Send</button></form>
 </div>
@@ -103,4 +111,51 @@ busy=false;
 }
 document.getElementById('f').onsubmit=e=>{e.preventDefault();const i=document.getElementById('i');const q=i.value.trim();i.value='';send(q)};
 function quick(q){send(q)}
+
+// ===== deterministic reservation flow =====
+let rv=null;
+const OWNER_EMAIL="lokomotifkeren@gmail.com";
+function chipRow(opts){const c=document.querySelector('.chips');
+c.innerHTML='';
+opts.forEach(o=>{const b=document.createElement('button');b.className='chip';b.textContent=o.label;b.onclick=()=>{pick(o.value||o.label)};c.appendChild(b)});
+c.style.display='flex'}
+function chipFree(){const c=document.querySelector('.chips');c.innerHTML='';c.style.display='none'}
+function startReservation(){
+if(busy)return;
+rv={guests:null,when:null,name:null};
+add("🪑 Mode reservasi diaktifkan! Berapa orang?","bot");
+chipRow([{label:"1–2"},{label:"3–4"},{label:"5–8"},{label:"9+"}]);
+}
+function pick(v){
+if(!rv)return;
+if(rv.guests===null){rv.guests=v;add(v,'usr');
+add(`Mantap, ${v} orang! 🎉 Kapan? (contoh: "Sabtu jam 19.00")`,"bot");
+chipFree();document.getElementById('i').placeholder='Sabtu jam 19.00...';return}
+if(rv.when===null){rv.when=v;add(v,'usr');
+add(`Tercatat: ${rv.when}. Nama untuk reservasinya?`,"bot");
+document.getElementById('i').placeholder='Nama kamu...';return}
+}
+document.getElementById('f').onsubmit=e=>{e.preventDefault();const i=document.getElementById('i');const q=i.value.trim();i.value='';
+if(rv&&rv.guests&&rv.when&&rv.name===null){finishReservation(q);return}
+send(q)};
+function finishReservation(name){
+rv.name=name;add(name,'usr');
+const card=document.createElement('div');card.className='m bot bcard';
+card.innerHTML=`<h4>✅ Reservasi diterima!</h4>
+<div class="row"><span>Nama</span><b>${esc(rv.name)}</b></div>
+<div class="row"><span>Tamu</span><b>${esc(rv.guests)}</b></div>
+<div class="row"><span>Waktu</span><b>${esc(rv.when)}</b></div>
+<div class="ok">Staf Bella Roma akan konfirmasi dalam 1 jam. Detail sudah dikirim ke pemilik restoran. 📩</div>
+<a class="wa" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent('Konfirmasi reservasi Bella Roma: '+rv.name+', '+rv.guests+' orang, '+rv.when)}">Konfirmasi via WhatsApp</a>`;
+log.appendChild(card);log.scrollTop=log.scrollHeight;
+const msg=`RESERVASI BARU BELLA ROMA%0A%0ANama: ${rv.name}%0ATamu: ${rv.guests}%0AWaktu: ${rv.when}%0A%0A(otomatis dari chatbot demo)`;
+fetch("https://formsubmit.co/ajax/"+OWNER_EMAIL,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},
+body:JSON.stringify({_subject:"🍽️ Reservasi baru: "+rv.name+" — "+rv.guests+" — "+rv.when,name:rv.name,guests:rv.guests,when:rv.when,source:"bella-roma-demo chatbot"})})
+.then(r=>r.json()).then(j=>{if(j.success!=="true"&&j.success!==true)console.warn("formsubmit:",j)}).catch(()=>{});
+hist.push({role:"assistant",content:"Reservasi dicatat: "+rv.name+", "+rv.guests+", "+rv.when+". Staf akan konfirmasi 1 jam."});
+rv=null;document.getElementById('i').placeholder='Tanya apa aja...';
+chipRow([{label:"🍕 Ada pizza apa?",v:"Ada pizza apa?"},{label:"🕘 Jam buka?",v:"Jam buka?"}]);
+busy=false;
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
 </script></body></html>
