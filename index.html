@@ -23,7 +23,7 @@ function add(t,who){const d=document.createElement('div');d.className='m '+who;d
 add("Buonasera! I can book tables, answer the menu, or take your details. What can I do for you?","bot");
 // AI-powered assistant (Groq inference, live)
 const _p="fuma-demo";
-const _k=atob("Z3NrX2p4eUFobVJWeHVubktsdnJEakd3N0NXR2R5YjNGWUVlSFhLOU9jcTdmaVEzdVF1T09kRnVMM0w5");
+const _k=atob("Z3NrX2p4eUFobVJWeHVubktsdnJEajdDV0dkeWIzRlllSFhLOU9jcTdwZmkzUXVPT2RGdUwzTDk=");
 const SYS="You are the friendly AI reservation assistant of Bella Roma Trattoria (Italian restaurant). Answer in the language the guest uses (EN or ID). Keep replies under 60 words. Facts: open Tue-Sun 12:00-15:00 & 18:00-23:00, closed Monday. Menu favorites: truffle tagliatelle $22, osso buco $28, margherita pizza $14, vegan risotto, quattro formaggi. Free parking after 6pm. Free cancellation up to 2h before booking. You cannot confirm bookings yourself - always say a human will confirm within an hour after collecting: number of guests, day+time, and name. Never invent facts beyond these.";
 let hist=[{role:"system",content:SYS}];
 document.getElementById('f').onsubmit=async e=>{e.preventDefault();
