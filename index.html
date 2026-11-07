@@ -35,7 +35,7 @@ hist.push({role:"user",content:q});
 if(hist.length>15)hist=[hist[0],...hist.slice(-14)];
 const r=await fetch("https://api.groq.com/openai/v1/chat/completions",{method:"POST",
 headers:{"Authorization":"Bearer "+_k,"Content-Type":"application/json"},
-body:JSON.stringify({model:"qwen/qwen3.8-27b",messages:hist,max_tokens:200,temperature:0.6})});
+body:JSON.stringify({model:"qwen/qwen3.8-27b",messages:hist,max_tokens:600,temperature:0.6})});
 if(!r.ok)throw new Error("api "+r.status);
 const d=await r.json();const a=(d.choices?.[0]?.message?.content||"...").trim();
 hist.push({role:"assistant",content:a});th.textContent=a;
