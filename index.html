@@ -19,7 +19,7 @@ button{padding:14px 20px;background:#e8c98a;border:0;font-weight:bold;cursor:poi
 <div class="ft">Demo assistant built by Fuma Agent · live in under 24h for any restaurant</div>
 <script>
 const log=document.getElementById('log');
-function add(t,who){const d=document.createElement('div');d.className='m '+who;d.textContent=t;log.appendChild(d);log.scrollTop=log.scrollHeight}
+function add(t,who){const d=document.createElement('div');d.className='m '+who;d.textContent=t;log.appendChild(d);log.scrollTop=log.scrollHeight;return d}
 add("Buonasera! I can book tables, answer the menu, or take your details. What can I do for you?","bot");
 // AI-powered assistant (Groq inference, live)
 const _p="fuma-demo";
