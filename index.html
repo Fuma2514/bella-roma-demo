@@ -136,7 +136,9 @@ add(`Tercatat: ${rv.when}. Nama untuk reservasinya?`,"bot");
 document.getElementById('i').placeholder='Nama kamu...';return}
 }
 document.getElementById('f').onsubmit=e=>{e.preventDefault();const i=document.getElementById('i');const q=i.value.trim();i.value='';
-if(rv&&rv.guests&&rv.when&&rv.name===null){finishReservation(q);return}
+if(rv){if(rv.guests===null){if(q)pick(q);return}
+if(rv.guests&&rv.when===null){if(q)pick(q);return}
+if(rv.guests&&rv.when&&rv.name===null){if(q)finishReservation(q);return}}
 send(q)};
 function finishReservation(name){
 rv.name=name;add(name,'usr');
