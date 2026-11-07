@@ -148,7 +148,10 @@ card.innerHTML=`<h4>✅ Reservasi diterima!</h4>
 <div class="row"><span>Tamu</span><b>${esc(rv.guests)}</b></div>
 <div class="row"><span>Waktu</span><b>${esc(rv.when)}</b></div>
 <div class="ok">Staf Bella Roma akan konfirmasi dalam 1 jam. Detail sudah dikirim ke pemilik restoran. 📩</div>
-<a class="wa" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent('Konfirmasi reservasi Bella Roma: '+rv.name+', '+rv.guests+' orang, '+rv.when)}">Konfirmasi via WhatsApp</a>`;
+<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+<a class="wa" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent('Konfirmasi reservasi Bella Roma: '+rv.name+', '+rv.guests+' orang, '+rv.when)}">📱 WhatsApp</a>
+<a class="wa" style="background:#e8c98a" target="_blank" rel="noopener" href="https://mail.google.com/mail/?view=cm&fs=1&to=${OWNER_EMAIL}&su=${encodeURIComponent('Reservasi: '+rv.name+' - '+rv.guests+' - '+rv.when)}&body=${encodeURIComponent('Reservasi baru Bella Roma:\n\nNama: '+rv.name+'\nTamu: '+rv.guests+'\nWaktu: '+rv.when+'\n\n(otomatis dari chatbot demo)')}">✉️ Email owner</a>
+</div>`;
 log.appendChild(card);log.scrollTop=log.scrollHeight;
 const msg=`RESERVASI BARU BELLA ROMA%0A%0ANama: ${rv.name}%0ATamu: ${rv.guests}%0AWaktu: ${rv.when}%0A%0A(otomatis dari chatbot demo)`;
 fetch("https://formsubmit.co/ajax/"+OWNER_EMAIL,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},
